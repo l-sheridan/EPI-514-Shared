@@ -3,6 +3,18 @@ df <- read.csv("brfssClean.csv", header = TRUE)
 raw <- read.csv("brfssRaw.csv")
 library(survey)
 library(tidyverse)
+
+###### create categorical variable for education ###########################
+dat$educateCat[dat$educa=="Grade 1-8"] <- "Less than Secondary Education"
+dat$educateCat[dat$educa=="Grade 9-11"] <- "Less than Secondary Education"
+dat$educateCat[dat$educa=="HS Grad"] <- "Secondary Education or Above"
+dat$educateCat[dat$educa=="Some College"] <- "Secondary Education or Above"
+dat$educateCat[dat$educa=="College Grad"] <- "Secondary Education or Above"
+
+### Remove weird top row ##########
+dat2 <- dat %>% slice(-c(1))
+dat <- dat2
+
 #count number of nas in job category
 sum(is.na(df$job))
 #survey design
@@ -25,5 +37,15 @@ prop.table(svytable(~emplinjm, design =  brfssdsgn))
 tb3 <- svytable(~emplinjm+job, design =  brfssdsgn)
 print(tb3/colSums(tb3), digits = 3)
 
+############ education ###########
+           
+glimpse(dat$educa)
+sum(is.na(dat$educateCat))
+           
+prop.table(svytable(~educateCat, design = brfssdsgn))*100
+           tb4 <- svytable(~educateCat+job, design = brfssdsgn)
+           print(tb4/colSums(tb4), digits = 3)*100
+           
+           
 
 
