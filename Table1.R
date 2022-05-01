@@ -45,7 +45,11 @@ sum(is.na(dat$educateCat))
 prop.table(svytable(~educateCat, design = brfssdsgn))*100
            tb4 <- svytable(~educateCat+job, design = brfssdsgn)
            print(tb4/colSums(tb4), digits = 3)*100
+
            
-           
+####### health insurance #######
+prop.table(svytable(~hlthpln1, design =  brfssdsgn))
+tb5 <- svytable(~hlthpln1+job, design =  brfssdsgn)
+print(tb5/colSums(tb5), digits = 3)           
 
 
