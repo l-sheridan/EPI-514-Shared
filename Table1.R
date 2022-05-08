@@ -53,3 +53,12 @@ tb5 <- svytable(~hlthpln1+job, design =  brfssdsgn)
 print(tb5/colSums(tb5), digits = 3)           
 
 
+#table 2 
+epi.2by2(dat=table(df$job12, df$opAny12),method = "cohort.count")
+#Confounding by age 
+df$over65_12 <- ifelse(df$X_age_g >=5, 1, 2 )
+epi.2by2(dat=table(df$job12, df$opAny12, df$over65_12),method = "cohort.count")
+#counfounding by education
+df$hsComplete[df$hsComplete==0] <- 2
+epi.2by2(dat=table(df$job12, df$opAny12, df$hsComplete),method = "cohort.count")
+
