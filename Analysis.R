@@ -3,6 +3,7 @@ df <- read.csv("brfssClean.csv", header = TRUE)
 raw <- read.csv("brfssRaw.csv")
 library(survey)
 library(tidyverse)
+library(epiR)
 
 ###### create categorical variable for education ###########################
 dat$educateCat[dat$educa=="Grade 1-8"] <- "Less than Secondary Education"
