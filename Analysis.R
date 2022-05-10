@@ -65,5 +65,8 @@ epi.2by2(dat=table(df$job12, df$opAny12, df$hsComplete),method = "cohort.count")
            
 #confounding by race
 df$race <- ifelse(df$X_imprace=="White NH", 2, 1)
-epi.2by2(dat=table(df$job12, df$opAny12, df$race),method = "cohort.count")
+df$X_imprace <- as.factor(df$X_imprace)
+
+epi.2by2(dat=table(df$job12, df$opAny12, df$X_imprace),method = "cohort.count")
+table(df$job12, df$opAny12, df$X_imprace, deparse.level=2)
 
