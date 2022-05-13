@@ -1,38 +1,49 @@
-setwd("C:/Users/fangc/OneDrive - UW/Desktop/EPI 514")
-df <- read.csv("brfssClean.csv", header = TRUE)
+setwd("C:/Users/12063/Desktop/EPI 514/Datasets")
+dat <- read.csv("brfssClean.csv", header = TRUE)
 raw <- read.csv("brfssRaw.csv")
 library(survey)
 library(tidyverse)
 library(epiR)
 
-###### create categorical variable for education ###########################
+
+# Label NA's for educa
+dat$educa[dat$educa==" "] <- NA
+
+#### create categorical variable for education ####
 dat$educateCat[dat$educa=="Grade 1-8"] <- "Less than Secondary Education"
 dat$educateCat[dat$educa=="Grade 9-11"] <- "Less than Secondary Education"
 dat$educateCat[dat$educa=="HS Grad"] <- "Secondary Education or Above"
 dat$educateCat[dat$educa=="Some College"] <- "Secondary Education or Above"
 dat$educateCat[dat$educa=="College Grad"] <- "Secondary Education or Above"
 
+table(dat$educateCat)
+sum(is.na(dat$educateCat))
+
 ### Remove weird top row ##########
-dat2 <- dat %>% slice(-c(1))
-dat <- dat2
+dat <- dat %>% slice(-c(1))
 
 #count number of nas in job category
 sum(is.na(df$job))
+
 #survey design
 options(survey.lonely.psu = "adjust") 
 brfssdsgn <- svydesign(data=df, id=~1, strata=~X_ststr, weight=~X_llcpwt)
+
 #age groups
 prop.table(svytable(~X_age_g, design =  brfssdsgn))
 tb1 <- svytable(~X_age_g+job, design =  brfssdsgn)
 print(tb1/colSums(tb1), digits = 3)
+
 #race
 prop.table(svytable(~X_imprace, design =  brfssdsgn)
 tb2 <- svytable(~X_imprace+job, design =  brfssdsgn)
 print(tb2/colSums(tb2), digits = 3)
+           
 #opioid use
 prop.table(svytable(~op_any, design =  brfssdsgn))
 tb3 <- svytable(~op_any+job, design =  brfssdsgn)
 print(tb3/colSums(tb3), digits = 3)
+           
 #work related injuries
 prop.table(svytable(~emplinjm, design =  brfssdsgn))
 tb3 <- svytable(~emplinjm+job, design =  brfssdsgn)
@@ -40,12 +51,12 @@ print(tb3/colSums(tb3), digits = 3)
 
 ############ education ###########
            
-glimpse(dat$educa)
-sum(is.na(dat$educateCat))
-           
 prop.table(svytable(~educateCat, design = brfssdsgn))*100
            tb4 <- svytable(~educateCat+job, design = brfssdsgn)
-           print(tb4/colSums(tb4), digits = 3)*100
+            print(tb4/rowSums(tb4), digits=3)*100
+           
+ # print to manually check proportions in education
+            print(tb4)
 
            
 ####### health insurance #######
